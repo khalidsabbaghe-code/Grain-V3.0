@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grain - Transform AI writing to sound genuinely human">
+  <title>Grain — Make AI Writing Human</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --accent: #b89968;
+      --accent-dark: #9d7e52;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f6f3;
+      --bg-tertiary: #ede9e3;
+      --text-primary: #2c2c2c;
+      --text-secondary: #5a5a5a;
+      --text-tertiary: #7a7a7a;
+      --border: #e0dcd5;
+      --success: #2d7a3e;
+      --danger: #c41c1c;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      letter-spacing: -0.02em;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-stat {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .nav-stat .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
+    }
+
+    .nav-stat .value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'Instrument Serif', serif;
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 3px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      letter-spacing: 0;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-dark);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      margin-top: 70px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 3rem;
+      max-width: 700px;
+    }
+
+    .header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* Main Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .input-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 300px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      border-radius: 3px;
+      resize: vertical;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(184, 153, 104, 0.1);
+    }
+
+    textarea::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .input-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .word-count {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    .progress-fill.warning {
+      background: #d4850c;
+    }
+
+    .progress-fill.danger {
+      background: var(--danger);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .control-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .control-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Main Button */
+    button.primary {
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--accent-dark);
+    }
+
+    button.primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button.primary.loading {
+      pointer-events: none;
+    }
+
+    /* Output Card */
+    .output-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .output-box {
+      min-height: 300px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: 3px;
+      line-height: 1.7;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .output-box.empty {
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .output-actions button {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+
+    .output-actions button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-value {
+      font-family: 'Instrument Serif', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    .sidebar-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 44, 44, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 90%;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .modal h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .modal p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .pricing-toggle {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 3px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .price-display {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 3px;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .price {
+      font-family: 'Instrument Serif', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .features-list li {
+      padding: 0.75rem 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .features-list li:last-child {
+      border-bottom: none;
+    }
+
+    .features-list li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Toasts */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--success);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 2001;
+      animation: slideUp 0.3s ease, slideDown 0.3s ease 2.7s;
+    }
+
+    .toast.error {
+      background: var(--danger);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        padding: 1rem;
+      }
+
+      .nav-right {
+        gap: 1rem;
+      }
+
+      .nav-stat {
+        font-size: 12px;
+      }
+
+      .container {
+        padding: 1rem;
+        margin-top: 60px;
+      }
+
+      .input-card, .output-card, .sidebar-card {
+        padding: 1.5rem;
+      }
+
+      textarea {
+        min-height: 250px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(20px); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">Grain</div>
+    <div class="nav-right">
+      <div class="nav-stat">
+        <span class="label">Today</span>
+        <span class="value" id="nav-uses">3</span>
+      </div>
+      <button class="nav-cta" id="nav-upgrade">Upgrade</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1>Make AI writing sound human</h1>
+      <p>Transform artificial prose into genuine, natural-sounding text that reads like a human wrote it.</p>
+    </div>
+
+    <div class="grid">
+      <!-- Input -->
+      <div class="input-card">
+        <label class="input-label">Paste AI-generated text</label>
+        <textarea id="input" placeholder="Your AI-written content goes here..."></textarea>
+        
+        <div class="input-footer">
+          <span class="word-count" id="word-count">0</span>
+          <span id="word-limit"></span>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress" style="width: 0%"></div>
+        </div>
+
+        <div class="controls">
+          <div class="control-group">
+            <button class="control-btn active" data-intensity="light">Light</button>
+            <button class="control-btn" data-intensity="standard">Standard</button>
+            <button class="control-btn" data-intensity="aggressive">Aggressive</button>
+          </div>
+        </div>
+
+        <button class="primary" id="humanize">Humanize</button>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-label">Streak</div>
+          <div class="sidebar-value" id="streak">0</div>
+          <div class="sidebar-sub">days</div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-label">Total Used</div>
+          <div class="sidebar-value" id="total-used">0</div>
+          <div class="sidebar-sub">humanizations</div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-label">Plan</div>
+          <div class="sidebar-sub" style="margin: 1rem 0; font-size: 13px;" id="plan-display">Free</div>
+          <button class="primary" style="width: 100%;" id="sidebar-upgrade">View Plans</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-card">
+      <label class="input-label">Humanized output</label>
+      <div class="output-box empty" id="output">
+        Your humanized text will appear here
+      </div>
+      <div class="output-actions">
+        <button onclick="copyOutput()">Copy</button>
+        <button onclick="downloadOutput()">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing Modal -->
+  <div class="modal" id="pricing-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closePricing()">&times;</button>
+      <h2>Simple, transparent pricing</h2>
+      <p>Choose the plan that works for you</p>
+
+      <div class="pricing-toggle">
+        <button class="toggle-btn active" onclick="setPricingMode('monthly')">Monthly</button>
+        <button class="toggle-btn" onclick="setPricingMode('yearly')">Yearly <span style="font-size: 11px;">(Save 20%)</span></button>
+      </div>
+
+      <div class="price-display">
+        <div class="price" id="price-amount">$9</div>
+        <div class="price-period" id="price-period">/month</div>
+      </div>
+
+      <ul class="features-list">
+        <li>Unlimited humanizations</li>
+        <li>All intensity levels</li>
+        <li>Download & export</li>
+        <li>No ads</li>
+        <li>Priority support</li>
+      </ul>
+
+      <button class="primary" style="width: 100%; margin-bottom: 1rem;" id="upgrade-btn">Start free trial</button>
+      <p style="font-size: 12px; text-align: center; color: var(--text-tertiary);">No credit card required. Cancel anytime.</p>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      plan: 'free',
+      usageToday: 0,
+      streak: 0,
+      totalUsed: 0,
+      intensity: 'light',
+      maxDaily: 3
+    };
+
+    const elements = {
+      input: document.getElementById('input'),
+      output: document.getElementById('output'),
+      humanize: document.getElementById('humanize'),
+      progress: document.getElementById('progress'),
+      wordCount: document.getElementById('word-count'),
+      streak: document.getElementById('streak'),
+      totalUsed: document.getElementById('total-used'),
+      navUses: document.getElementById('nav-uses'),
+      pricingModal: document.getElementById('pricing-modal'),
+      priceAmount: document.getElementById('price-amount'),
+      pricePeriod: document.getElementById('price-period'),
+      planDisplay: document.getElementById('plan-display'),
+      upgradeBtn: document.getElementById('upgrade-btn'),
+      navUpgrade: document.getElementById('nav-upgrade')
+    };
+
+    // Load state
+    function loadState() {
+      const saved = localStorage.getItem('grain-state');
+      if (saved) {
+        const data = JSON.parse(saved);
+        Object.assign(state, data);
+        const today = new Date().toDateString();
+        const lastDate = localStorage.getItem('grain-last-date');
+        if (lastDate !== today) {
+          state.usageToday = 0;
+          if (lastDate) state.streak += 1;
+          localStorage.setItem('grain-last-date', today);
+        }
+      } else {
+        localStorage.setItem('grain-last-date', new Date().toDateString());
+      }
+      updateUI();
+    }
+
+    function saveState() {
+      localStorage.setItem('grain-state', JSON.stringify(state));
+    }
+
+    // Update UI
+    function updateUI() {
+      elements.streak.textContent = state.streak;
+      elements.totalUsed.textContent = state.totalUsed;
+      elements.navUses.textContent = Math.max(0, state.maxDaily - state.usageToday);
+      elements.planDisplay.textContent = state.plan === 'pro' ? 'Pro' : 'Free';
+      
+      const wordCount = elements.input.value.length;
+      const percent = Math.min(100, (wordCount / 150) * 100);
+      elements.progress.style.width = percent + '%';
+      elements.wordCount.textContent = wordCount;
+      elements.progress.classList.remove('warning', 'danger');
+      
+      if (percent > 85) elements.progress.classList.add('warning');
+      if (percent > 100) elements.progress.classList.add('danger');
+
+      const canUse = state.plan === 'pro' || state.usageToday < state.maxDaily;
+      elements.humanize.disabled = !canUse || wordCount === 0 || wordCount > 150;
+      
+      if (state.plan === 'pro') {
+        elements.navUpgrade.textContent = 'Manage';
+        elements.navUpgrade.onclick = () => openPricing();
+      }
+    }
+
+    // Humanize
+    elements.humanize.addEventListener('click', async () => {
+      if (elements.humanize.disabled) return;
+      
+      elements.humanize.disabled = true;
+      elements.humanize.classList.add('loading');
+      elements.humanize.textContent = 'Humanizing...';
+
+      // Simulate processing
+      await new Promise(r => setTimeout(r, 1200));
+
+      const humanized = elements.input.value
+        .replace(/undoubtedly/g, 'definitely')
+        .replace(/thus/g, 'so')
+        .replace(/facilitate/g, 'help')
+        .replace(/leverage/g, 'use')
+        .replace(/optimal/g, 'best')
+        .replace(/synergy/g, 'working together')
+        .replace(/stakeholder/g, 'user')
+        .replace(/in order to/g, 'to')
+        .replace(/at the end of the day/g, '');
+
+      elements.output.textContent = humanized;
+      elements.output.classList.remove('empty');
+      
+      state.usageToday += 1;
+      state.totalUsed += 1;
+      if (state.usageToday === 1) state.streak += 1;
+      saveState();
+      updateUI();
+
+      elements.humanize.classList.remove('loading');
+      elements.humanize.textContent = 'Humanize';
+      showToast('Text humanized successfully', 'success');
+    });
+
+    // Word count
+    elements.input.addEventListener('input', updateUI);
+
+    // Intensity
+    document.querySelectorAll('[data-intensity]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (state.plan === 'free') {
+          openPricing();
+          return;
+        }
+        document.querySelectorAll('[data-intensity]').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        state.intensity = e.target.dataset.intensity;
+      });
+    });
+
+    // Pricing
+    function openPricing() {
+      elements.pricingModal.classList.add('open');
+    }
+
+    function closePricing() {
+      elements.pricingModal.classList.remove('open');
+    }
+
+    function setPricingMode(mode) {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      if (mode === 'yearly') {
+        elements.priceAmount.textContent = '$99';
+        elements.pricePeriod.textContent = '/year';
+      } else {
+        elements.priceAmount.textContent = '$9';
+        elements.pricePeriod.textContent = '/month';
+      }
+    }
+
+    elements.upgradeBtn.addEventListener('click', () => {
+      state.plan = 'pro';
+      saveState();
+      updateUI();
+      closePricing();
+      showToast('Welcome to Grain Pro!', 'success');
+    });
+
+    document.getElementById('nav-upgrade').addEventListener('click', openPricing);
+    document.getElementById('sidebar-upgrade').addEventListener('click', openPricing);
+
+    // Copy & Download
+    function copyOutput() {
+      navigator.clipboard.writeText(elements.output.textContent);
+      showToast('Copied to clipboard', 'success');
+    }
+
+    function downloadOutput() {
+      const text = elements.output.textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'humanized-text.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Downloaded as text file', 'success');
+    }
+
+    // Toast
+    function showToast(msg, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = 'toast' + (type === 'error' ? ' error' : '');
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePricing();
+    });
+
+    // Close modal on outside click
+    elements.pricingModal.addEventListener('click', (e) => {
+      if (e.target === elements.pricingModal) closePricing();
+    });
+
+    // Init
+    loadState();
+  </script>
+</body>
+</html>

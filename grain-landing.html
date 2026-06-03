@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grain - Make AI writing sound genuinely human. Transform artificial prose into natural text.">
+  <title>Grain — Make AI Writing Human</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --accent: #b89968;
+      --accent-dark: #9d7e52;
+      --bg: #ffffff;
+      --bg-alt: #f8f6f3;
+      --text-primary: #2c2c2c;
+      --text-secondary: #5a5a5a;
+      --text-tertiary: #7a7a7a;
+      --border: #e0dcd5;
+      --success: #2d7a3e;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: background 0.2s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-dark);
+    }
+
+    /* Hero */
+    .hero {
+      margin-top: 100px;
+      padding: 4rem 2rem;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(40px, 6vw, 72px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    /* Demo Section */
+    .demo {
+      margin: 5rem 2rem;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 3rem;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .demo h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .demo-box {
+      padding: 1.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-primary);
+    }
+
+    .demo-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    .demo-arrow {
+      text-align: center;
+      font-size: 24px;
+      color: var(--accent);
+      margin: 2rem 0;
+      grid-column: 1 / -1;
+    }
+
+    /* Features */
+    .features {
+      margin: 5rem 2rem;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-item {
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Pricing */
+    .pricing {
+      margin: 5rem 2rem;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .pricing h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .pricing-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .pricing-card {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg-alt);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      border-width: 2px;
+      background: var(--bg);
+    }
+
+    .pricing-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .pricing-price {
+      font-family: 'Instrument Serif', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .pricing-period {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .pricing-list {
+      list-style: none;
+      flex-grow: 1;
+    }
+
+    .pricing-list li {
+      padding: 0.75rem 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-list li:last-child {
+      border-bottom: none;
+    }
+
+    .pricing-list li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pricing-cta {
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 3px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pricing-cta:hover {
+      background: var(--accent-dark);
+    }
+
+    .pricing-card.featured .pricing-cta {
+      font-weight: 700;
+    }
+
+    /* FAQ */
+    .faq {
+      margin: 5rem 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .faq h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .faq-item {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-q::after {
+      content: '▶';
+      font-size: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.open .faq-q::after {
+      transform: rotate(90deg);
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding: 3rem 2rem;
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1rem;
+      }
+
+      .hero {
+        margin-top: 70px;
+        padding: 2rem 1rem;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-arrow {
+        transform: rotate(90deg);
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">Grain</div>
+    <button class="nav-cta" onclick="document.location='grain-v3.html'">Launch App</button>
+  </nav>
+
+  <div class="hero">
+    <h1>Make AI writing sound human</h1>
+    <p>Transform artificial, robotic prose into genuinely natural text. No more detectable AI patterns. No more awkward phrasing.</p>
+    <button class="hero-cta" onclick="document.location='grain-v3.html'">Try Free</button>
+  </div>
+
+  <div class="demo">
+    <h2>See the difference</h2>
+    <div class="demo-grid">
+      <div>
+        <div class="demo-label">❌ AI-Generated (Before)</div>
+        <div class="demo-box">
+          In conclusion, the aforementioned methodology facilitates a paradigm shift that leverages cutting-edge technologies to optimize stakeholder engagement through synergistic approaches that fundamentally transform the organizational ecosystem.
+        </div>
+      </div>
+      <div>
+        <div class="demo-label">✓ Humanized (After)</div>
+        <div class="demo-box">
+          Basically, this approach changes how we do things. It uses new tech to help people work together better, and it really does transform the way the organization operates.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <h2>Everything you need</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-title">Fast processing</div>
+        <div class="feature-desc">Get humanized text in seconds. No waiting around for results.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-title">Multiple intensities</div>
+        <div class="feature-desc">Light touch or complete rewrite. You control how much changes.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-title">Works offline</div>
+        <div class="feature-desc">Your text stays private. Everything happens in your browser.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-title">Copy & download</div>
+        <div class="feature-desc">Instantly copy to clipboard or download as a text file.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-title">No watermarks</div>
+        <div class="feature-desc">Clean output with no ads, signatures, or branding.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-title">Privacy first</div>
+        <div class="feature-desc">We don't store, train on, or sell your writing. Ever.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pricing">
+    <h2>Simple pricing</h2>
+    <p class="pricing-subtitle">Start free. Upgrade when you need it.</p>
+    
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Free</div>
+        <div>
+          <div class="pricing-price">$0</div>
+          <div class="pricing-period">Forever free</div>
+        </div>
+        <ul class="pricing-list">
+          <li>3 humanizations per day</li>
+          <li>Light intensity only</li>
+          <li>Download output</li>
+        </ul>
+        <button class="pricing-cta" onclick="document.location='grain-v3.html'">Get Started</button>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-name">Pro</div>
+        <div>
+          <div class="pricing-price">$9</div>
+          <div class="pricing-period">/month (or $99/year)</div>
+        </div>
+        <ul class="pricing-list">
+          <li>Unlimited humanizations</li>
+          <li>All intensity levels</li>
+          <li>Download & export</li>
+          <li>Priority processing</li>
+          <li>No ads</li>
+        </ul>
+        <button class="pricing-cta" onclick="document.location='grain-v3.html'">Start Free Trial</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>Questions?</h2>
+    
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does it work?</div>
+      <div class="faq-a">Grain analyzes your AI-generated text and rewrites it to sound more human. We replace robotic phrases, vary sentence structure, and add natural language patterns that human writers use.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is my data safe?</div>
+      <div class="faq-a">Yes. Everything runs in your browser. We never store, access, or train on your text. Your writing stays completely private.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does it work with all AI writing?</div>
+      <div class="faq-a">Works best with ChatGPT, Claude, and other LLM outputs. The more robotic the original, the better the transformation.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I cancel Pro anytime?</div>
+      <div class="faq-a">Yes. No contracts, no locked-in terms. Cancel your subscription anytime with one click.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What's the difference between intensities?</div>
+      <div class="faq-a">Light makes minimal changes. Standard balances naturalness with your original meaning. Aggressive rewrites heavily for maximum humanization.</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Grain © 2026. Made with care. <a href="#">Privacy</a> • <a href="#">Terms</a> • <a href="#">Contact</a></p>
+  </footer>
+
+  <script>
+    // FAQ toggle
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        q.parentElement.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>
